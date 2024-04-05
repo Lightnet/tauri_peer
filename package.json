@@ -1,0 +1,23 @@
+{
+  "name": "tauri_peer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js",
+    "build": "echo test",
+    "tauri": "tauri"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.11"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.9.1",
+    "@tauri-apps/api": "^1.5.3",
+    "hono": "^4.2.2"
+  }
+}
