@@ -145,6 +145,24 @@ async function main(){
     return c.html('html')
   });
 
+  app.get('/key', async(c) => {
+    try {
+      //const entry = await db.get(id_key);
+      //console.log("entry: ", entry);
+      //return c.json(entry);
+      let entries = [];
+      // Read all entries
+      for await (const entry of db.createReadStream()) {
+        // ..
+        entries.push(entry);
+      }
+      return c.json(entries);
+
+    } catch (error) {
+      console.log("ERROR");
+      return c.json({api:'ERROR'});
+    }
+  });
 
   app.get('/key/:id', async(c) => {
     const id_key  = c.req.param('id')
@@ -159,14 +177,14 @@ async function main(){
       return c.json(entry);
     } catch (error) {
       console.log("ERROR");
-      return c.json(JSON.stringify({api:'ERROR'}));
+      return c.json({api:'ERROR'});
     }
   });
 
   app.post('/key', async(c) => {
     const {key, value} = await c.req.json();
     if((key.length == 0) || value.length == 0){
-      return c.json(JSON.stringify({api:'Length'}))  
+      return c.json({api:'Length'})  
     }
     try {
       let result = await db.put(key, value);
