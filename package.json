@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node index.js",
+    "dev": "nodemon index.js ",
+    "devn": "node index.js",
     "build": "echo test",
     "tauri": "tauri"
   },
@@ -18,6 +19,11 @@
   "dependencies": {
     "@hono/node-server": "^1.9.1",
     "@tauri-apps/api": "^1.5.3",
-    "hono": "^4.2.2"
+    "b4a": "^1.6.6",
+    "corestore": "^6.18.1",
+    "gun": "^0.2020.1240",
+    "hono": "^4.2.2",
+    "hyperbee": "^2.19.0",
+    "hyperswarm": "^4.7.14"
   }
 }

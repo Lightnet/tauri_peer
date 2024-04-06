@@ -1,13 +1,15 @@
 
 
 import van from 'van';
+import { UIHyperBeeTest } from './hyperbee/ui_hyperbee.js';
 
-const {div, label} = van.tags;
+const {div, button, input,  label} = van.tags;
 
 const App = ()=>{
 
   return div(
-    label("Hello World Vanjs!")
+    label("Hello World Vanjs!"),
+    UIHyperBeeTest()
   );
 }
 
