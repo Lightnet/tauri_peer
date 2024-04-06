@@ -7,8 +7,35 @@ const {div, button, input, label} = van.tags;
 
 function UIHyperBeeTest(){
 
-  const objKey = van.state("a");
-  const objValue = van.state("sd");
+  async function getAll(){
+    let urlpath = '/key';
+    let resp = await fetch(urlpath,{
+      method:'GET',
+      headers:{
+        "Content-Type":"application/json"
+      }
+    })
+    let data = await resp.json();
+    console.log(data);
+    console.log(data.value);
+  }
+
+  return div(
+    UIHyperBeeKeyValue(),
+    UIHyperbeeJson()
+  )
+}
+
+function UIHyperbeeGetAll(){
+
+  return div(
+
+  );
+}
+
+function UIHyperBeeKeyValue(){
+  const objKey = van.state("");
+  const objValue = van.state("");
 
   async function keyPut(){
     let resp = await fetch('/key',{
@@ -42,23 +69,10 @@ function UIHyperBeeTest(){
     console.log(data.value);
   }
 
-  async function getAll(){
-    let urlpath = '/key';
-    let resp = await fetch(urlpath,{
-      method:'GET',
-      headers:{
-        "Content-Type":"application/json"
-      }
-    })
-    let data = await resp.json();
-    console.log(data);
-    console.log(data.value);
-  }
-
-
-
   return div(
-    label("HyperBee:"),
+    div(
+      label("[HyperBee Key and Value]"),
+    ),
     div(
       label(" KEY: "),
       input({value:objKey, oninput:e=>objKey.val=e.target.value}),
@@ -66,33 +80,20 @@ function UIHyperBeeTest(){
       input({value:objValue, oninput:e=>objValue.val=e.target.value}),
       button({onclick:keyPut},'put'),
       button({onclick:valueGet},'get')
-    ),
-    div(
-      button({onclick:getAll},'get all')
-    ),
-    UIHyperbeeJson()
+    )
   )
 }
 
-function UIHyperbeeGetAll(){
-
-
-  return div(
-
-  );
-}
-
-
 function UIHyperbeeJson(){
 
-  const objKeyId = van.state("a");
+  const objKeyId = van.state("");
   const objProps = van.state([]);
   const keysvalues = div()
 
-  function addKeyVal(){
+  function addProps(){
     let objs = objProps.val;
     let id = Date.now();
-    let item = {id:id,okey:"e",oval:"r"};
+    let item = {id:id,okey:"",oval:""};
     objs.push(item);
     objProps.val = objs;
     van.add(keysvalues,
@@ -136,13 +137,17 @@ function UIHyperbeeJson(){
           objs[i].okey = _data;
           break;
         }
+        if(_type == "value"){
+          objs[i].oval = _data;
+          break;
+        }
       }
     }
     objProps.val = objs;
     console.log(objs)
   }
 
-  function checkObjectJson(){
+  function checkObjectProps(){
     //console.log(objkeyvals)
     console.log(objProps.val)
   }
@@ -158,12 +163,25 @@ function UIHyperbeeJson(){
     console.log(obJson);
   }
 
+  function createObJson(){
+
+  }
+
+  function deleteObJson(){
+
+  }
+
   return div(
     div(
-      input({value:objKeyId, oninput:e=>objKeyId.val=e.target.value}),
-      button({onclick:addKeyVal},'Add Key'),
-      button({onclick:checkObjectJson},'keys and values'),
+      label('[HpyerBee Key and Json]')
+    ),
+    div(
+      input({value:objKeyId, oninput:e=>objKeyId.val=e.target.value,placeholder:"ID Key"}),
+      button({onclick:addProps},'Add Prop.'),
+      button({onclick:checkObjectProps},'Object props'),
       button({onclick:formatJson},'format Json'),
+      button({onclick:createObJson},'Create'),
+      button({onclick:deleteObJson},'Delete'),
       
     ),
     keysvalues,
