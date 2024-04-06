@@ -34,7 +34,22 @@ Run the web server.
      * [x] key and object json
        * [x] add / update
        * [ ] delete
-
+   * Page
+     * auth
+       * [ ] sign in
+       * [ ] sign up
+       * [ ] sign out
+       * [ ] 
+     * [ ] hyperbee
+     * [ ] admin
+       * [ ] swarm
+       * [ ] permission
+     * [ ] account
+     * [ ] manage files
+       * [ ] upload
+       * [ ] download
+       * [ ] delete
+     * [ ] chat message
 # Hyperbee build for UI:
   Current work in progress testing. There are many layers in how database can be set up.
 
