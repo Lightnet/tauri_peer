@@ -33,6 +33,7 @@ function UIHyperbeeGetAll(){
   );
 }
 
+// UI KEY AND VALUE
 function UIHyperBeeKeyValue(){
   const objKey = van.state("");
   const objValue = van.state("");
@@ -67,6 +68,14 @@ function UIHyperBeeKeyValue(){
     let data = await resp.json();
     console.log(data);
     console.log(data.value);
+    console.log(typeof data.value)
+    if(typeof data.value === 'string'){
+      objValue.val = data.value;
+    }
+    if(typeof data.value === 'object'){
+      console.log('NOPE')
+      return;
+    }
   }
 
   return div(
@@ -125,13 +134,13 @@ function UIHyperbeeJson(){
   }
 
   function updateObjectType(_id,_type,_data){
-    console.log("_id",_id)
-    console.log("_type",_type)
-    console.log("_data",_data)
+    //console.log("_id",_id)
+    //console.log("_type",_type)
+    //console.log("_data",_data)
 
     let objs = objProps.val;
     for (let i=0; i< objs.length ;i++){
-      console.log(objs[i])
+      //console.log(objs[i])
       if(objs[i].id == _id){
         if(_type == "key"){
           objs[i].okey = _data;
@@ -144,7 +153,7 @@ function UIHyperbeeJson(){
       }
     }
     objProps.val = objs;
-    console.log(objs)
+    //console.log(objs)
   }
 
   function checkObjectProps(){
@@ -163,12 +172,91 @@ function UIHyperbeeJson(){
     console.log(obJson);
   }
 
-  function createObJson(){
+  async function createObJson(){
+    if(typeof objKeyId.val === 'string' && objKeyId.val.length === 0){
+      console.log('EMPTY');
+      return;
+    }
 
+    let obJson = {};
+    let objs = objProps.val;
+    if(objs.length === 0){
+      console.log('EMPTY ARRAY!');
+      return;
+    }
+    for (let i=0; i< objs.length ;i++){
+      let _key = objs[i].okey;
+      let _value = objs[i].oval;
+      obJson[_key] = _value;
+    }
+    console.log(obJson);
+
+    try {
+      let resp = await fetch('/key',{
+        method:'POST',
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          key:objKeyId.val,
+          value:obJson
+        })
+      })
+      let data = await resp.json();
+      console.log(data);  
+    } catch (error) {
+      console.log("ERROR: ", error);
+    }
   }
 
   function deleteObJson(){
 
+  }
+
+  async function getKeyData(){
+    if(typeof objKeyId.val === 'string' && objKeyId.val.length ===0){
+      console.log('EMPTY');
+      return;
+    }
+    try{
+      let urlpath = '/key/'+objKeyId.val;
+      let resp = await fetch(urlpath,{
+        method:'GET',
+        headers:{
+          "Content-Type":"application/json"
+        }
+      })
+      let data = await resp.json();
+      console.log(data);
+      console.log(data.value);
+      if(data?.value){
+        btnClear();
+        if(typeof data.value === 'object'){
+          let objs = objProps.val;
+          // https://stackoverflow.com/questions/684672/how-do-i-loop-through-or-enumerate-a-javascript-object
+          //let keys = Object.entries(data.value);
+          for (const [key, value] of Object.entries(data.value)) {
+            console.log(`${key}: ${value}`);
+            let item = {id:Date.now(),okey:key,oval:value }
+            objs.push(item);
+            van.add(keysvalues,
+              ELKeyValue(item)
+            )
+          }
+          objProps.val = objs;
+        }
+        if(typeof data.value === 'string'){
+          console.log('STRING!')
+        }
+      }
+    }catch(e){
+      console.log("ERROR: ", e);
+    }
+  }
+
+  function btnClear(){
+    keysvalues.innerText = '';
+    objProps.val = [];
   }
 
   return div(
@@ -177,12 +265,13 @@ function UIHyperbeeJson(){
     ),
     div(
       input({value:objKeyId, oninput:e=>objKeyId.val=e.target.value,placeholder:"ID Key"}),
+      button({onclick:getKeyData},' Get '),
       button({onclick:addProps},'Add Prop.'),
       button({onclick:checkObjectProps},'Object props'),
       button({onclick:formatJson},'format Json'),
+      button({onclick:btnClear},'Clear List'),
       button({onclick:createObJson},'Create'),
       button({onclick:deleteObJson},'Delete'),
-      
     ),
     keysvalues,
   );
